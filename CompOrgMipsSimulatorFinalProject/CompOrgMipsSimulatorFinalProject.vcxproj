@@ -152,10 +152,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CompOrgMipsSimulatorFinalProject.cpp" />
+    <ClCompile Include="execution.cpp" />
     <ClCompile Include="p1.cpp" />
+    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="pipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="execution.h" />
     <ClInclude Include="p1.h" />
+    <ClInclude Include="parser.h" />
+    <ClInclude Include="pipeline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
