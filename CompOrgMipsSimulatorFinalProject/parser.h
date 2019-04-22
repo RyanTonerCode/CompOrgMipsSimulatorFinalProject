@@ -1,8 +1,9 @@
-#pragma once
-class parser
-{
-public:
-	parser();
-	~parser();
-};
 
+
+#ifndef parser
+
+#define parser
+#include <cstring>
+
+
+#endif 
