@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	}
 	
 	vector<vector<int> > pipeline;
-	vector<string> pipeinstructions;
+	vector<vector<string>> pipeinstructions;
 	// for(unsigned int i = 0; i < instructions.size(); i++){
 	// 	if(instructions[i][instructions[i].length] != ':'){
 	// 		pipeline.push_back(vector<string>());
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	// 	}
 	// }
  
-	string pipestages[7] = {'IF', 'ID', 'EX', 'MEM', 'WB', '.', '*' };
+	string pipestages[7] = {"IF", "ID", "EX", "MEM", "WB", ".", "*" };
 	unsigned int total = instructions.size() - labelcount + 4; //step where final instruction executes
 	unsigned int cycle = 0;
 	unsigned int stackpointer = 0;
@@ -94,13 +94,13 @@ int main(int argc, char* argv[])
 		pipeinstructions.push_back(vector<string>());
 		if(instructions[stackpointer][instructions[stackpointer].length] == ':')
 			stackpointer++;
-		pipeinstructions[i] = instructions[stackpointer];
+		//what is i here? pipeinstructions[i] = instructions[stackpointer];
 		for(int i = 0; i < 16; i++)
 			pipeline[i].push_back(5);
 
 		for(int i = 0; i < cycle; i++){
 			if(pipeline[cycle][17] == 'r'){
-				if()//DO CONTROL HAZARD HERE
+				//TODO if() DO CONTROL HAZARD HERE
 			}
 		}
 
