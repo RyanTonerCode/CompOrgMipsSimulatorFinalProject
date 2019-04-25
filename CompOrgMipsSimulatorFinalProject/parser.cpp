@@ -23,8 +23,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		else
 			dest = &(*saveReg[number]);
 
-		string reg1_str = line.substr(line.find(","));
-		reg1_str = line.substr(line.find("$") + 1, line.find(","));
+		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = atoi((const char*)reg1_str[1]);
 
@@ -66,8 +65,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		else
 			dest = &(*saveReg[number]);
 
-		string reg1_str = line.substr(line.find(","));
-		reg1_str = line.substr(line.find("$") + 1, line.find(","));
+		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = atoi((const char*)reg1_str[1]);
 
@@ -76,7 +74,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		else
 			reg1 = &(*saveReg[number]);
 
-		string imm_str = line.substr(line.find(",") + 1);
+		string imm_str = line.substr(line.find_last_of(",") + 1);
 
 		immediate = atoi((const char*)imm_str.c_str());
 
@@ -102,8 +100,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		else
 			left = &(*saveReg[number]);
 
-		string right_str = line.substr(line.find(","));
-		right_str = line.substr(line.find("$") + 1, line.find(","));
+		string right_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = atoi((const char*)right_str[1]);
 

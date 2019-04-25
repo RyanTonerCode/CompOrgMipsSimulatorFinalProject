@@ -153,12 +153,14 @@
   <ItemGroup>
     <ClCompile Include="CompOrgMipsSimulatorFinalProject.cpp" />
     <ClCompile Include="execution.cpp" />
+    <ClCompile Include="hazard_parser.cpp" />
     <ClCompile Include="p1.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="pipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="execution.h" />
+    <ClInclude Include="hazard_parser.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="pipeline.h" />
   </ItemGroup>
