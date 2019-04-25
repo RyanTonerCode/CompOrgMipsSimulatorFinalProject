@@ -72,8 +72,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	vector<vector<int> > pipeline;
-	vector<vector<string>> pipeinstructions;
+	vector<vector<int> > pipeline;					//A vector-vector of the cycles' stage
+	vector<string> pipeinstructions;		//A vector of the pipe's instruction
 	// for(unsigned int i = 0; i < instructions.size(); i++){
 	// 	if(instructions[i][instructions[i].length] != ':'){
 	// 		pipeline.push_back(vector<string>());
@@ -84,6 +84,8 @@ int main(int argc, char* argv[])
 	// }
  
 	string pipestages[7] = {"IF", "ID", "EX", "MEM", "WB", ".", "*" };
+	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
+
 	unsigned int total = instructions.size() - labelcount + 4; //step where final instruction executes
 	unsigned int cycle = 0;
 	unsigned int stackpointer = 0;
@@ -91,7 +93,8 @@ int main(int argc, char* argv[])
 		print_line();
 		print_cycle();
 
-		pipeinstructions.push_back(vector<string>());
+		pipeinstructions.push_back(instructions[stackpointer]);
+		pipeline.push_back(vector<int>());
 		if(instructions[stackpointer].at(instructions[stackpointer].length()) == ':')
 			stackpointer++;
 		//what is i here? pipeinstructions[i] = instructions[stackpointer];
@@ -99,16 +102,17 @@ int main(int argc, char* argv[])
 			pipeline[i].push_back(5);
 
 		for(unsigned int i = 0; i < cycle; i++){
-			if(pipeline[cycle][17] == 'r'){
+			if(pipeline[cycle][17] == 6){
 				//TODO if() DO CONTROL HAZARD HERE
+				//note: "6" may not indicate just a control hazard, it can represent a data hazard for non-forwarding
 			}
 		}
 
 		for(unsigned int i = 0; i <= pipeline.size(); i++){
-			cout << pipeline[i][0];
+			cout << pipeinstructions[i];
 			for(unsigned int j = 0; j < 16; j++){
 				std::cout.width(4);
-				cout << left << pipeline[i][j];
+				cout << left << pipestages[pipeline[i][j]];
 			}
 			cout << endl;
 		}
