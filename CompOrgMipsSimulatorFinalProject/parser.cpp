@@ -6,16 +6,17 @@ using namespace std;
 
 std::map<string, int> labelMap;
 
-//associate a label with a line number, for beq's and bne's
-void labelParse(string line, int lineNum) {
+//get line number from a label, for beq's and bne's
+int labelParse(string line) {
 	string instruction = line.substr(0, line.find(" "));
 
 	if (instruction == "bne" || instruction == "beq") {
-		string label = line.substr(line.find_last_of(",") + 1, line.find(":"));
-		labelMap[label] = lineNum;
+		string label = line.substr(line.find_last_of(",") + 1);
+		return getLabelLine(line);
 	}
 }
 
+//sets the map for a label line with a colon
 void labelLine(string line, int lineNum) {
 	if (line.at(line.length() - 2) == ':') {
 		labelMap[line.substr(0, line.length() - 2)] = lineNum;
