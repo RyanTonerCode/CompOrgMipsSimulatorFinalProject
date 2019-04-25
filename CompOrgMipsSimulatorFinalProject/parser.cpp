@@ -112,7 +112,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		int number = atoi((const char*)left_str[1]);
 
 		int* left, * right;
-		int immediate = 0;
+		//int immediate = 0; -wall says this is unused
 
 		if (left_str[0] == 't')
 			left = &(*tempReg[number]);
@@ -128,10 +128,10 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		else
 			right = &(*saveReg[number]);
 
-		if (instruction == "beq")
+		if (instruction == "beq") {
 			if (beq_(left, right))
 				return true;
-        else if (instruction == "bne")
+		} else if (instruction == "bne")
             if (bne_(left, right))
                 return true;
 

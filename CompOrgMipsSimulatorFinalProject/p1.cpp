@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 		for(int i = 0; i < 16; i++)
 			pipeline[i].push_back(5);
 
-		for(int i = 0; i < cycle; i++){
+		for(unsigned int i = 0; i < cycle; i++){
 			if(pipeline[cycle][17] == 'r'){
 				//TODO if() DO CONTROL HAZARD HERE
 			}
