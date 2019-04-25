@@ -1,9 +1,28 @@
 #include "parser.h"
 #include <string>
 #include "execution.h"
+#include <map>
 using namespace std;
 
+std::map<string, int> labelMap;
+
+//associate a label with a line number
+void labelParse(string line, int lineNum) {
+	string instruction = line.substr(0, line.find(" "));
+
+	if (instruction == "bne" || instruction == "beq") {
+		string label = line.substr(line.find_last_of(",") + 1);
+		labelMap._Insert_or_assign(label, lineNum);
+	}
+}
+
+//please dont pass me invalid data
+int getLabelLine(string label) {
+	return labelMap[label];
+}
+
 //this parser is for writeback
+//think of this as execution parser
 //returns true for branching
 bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 
