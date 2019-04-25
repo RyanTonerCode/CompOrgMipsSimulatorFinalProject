@@ -11,7 +11,7 @@ void labelParse(string line, int lineNum) {
 	string instruction = line.substr(0, line.find(" "));
 
 	if (instruction == "bne" || instruction == "beq") {
-		string label = line.substr(line.find_last_of(",") + 1);
+		string label = line.substr(line.find_last_of(",") + 1, line.find(":"));
 		//question: will substring retain the newline character?
 		//that'd throw off the label, since it should have a colon and no newline
 		labelMap[label] = lineNum;
