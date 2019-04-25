@@ -33,7 +33,7 @@ int getLabelLine(string label) {
 //this parser is for writeback
 //think of this as execution parser
 //returns true for branching
-bool parse(string line, int* saveReg[8], int* tempReg[10]) {
+bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 	string instruction = line.substr(0, line.find(" "));
 
@@ -47,18 +47,18 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		int* dest, *reg1, *reg2;
 
 		if (dest_str[0] == 't')
-			dest = &(*tempReg[number]);
+			dest = &(tempReg[number]);
 		else
-			dest = &(*saveReg[number]);
+			dest = &(saveReg[number]);
 
 		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = reg1_str[1] - '0';
 
 		if (reg1_str[0] == 't')
-			reg1 = &(*tempReg[number]);
+			reg1 = &(tempReg[number]);
 		else
-			reg1 = &(*saveReg[number]);
+			reg1 = &(saveReg[number]);
 
 		string reg2_str = line.substr(line.find(","));
 		reg2_str = line.substr(line.find("$") + 1, line.find(","));
@@ -66,9 +66,9 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		number = reg2_str[1] - '0';
 
 		if (reg2_str[0] == 't')
-			reg2 = &(*tempReg[number]);
+			reg2 = &(tempReg[number]);
 		else
-			reg2 = &(*saveReg[number]);
+			reg2 = &(saveReg[number]);
 
 		if(instruction == "add")
 			add_(dest, reg1, reg2);
@@ -89,18 +89,18 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		int immediate = 0;
 
 		if (dest_str[0] == 't')
-			dest = &(*tempReg[number]);
+			dest = &(tempReg[number]);
 		else
-			dest = &(*saveReg[number]);
+			dest = &(saveReg[number]);
 
 		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = reg1_str[1] - '0';
 
 		if (reg1_str[0] == 't')
-			reg1 = &(*tempReg[number]);
+			reg1 = &(tempReg[number]);
 		else
-			reg1 = &(*saveReg[number]);
+			reg1 = &(saveReg[number]);
 
 		string imm_str = line.substr(line.find_last_of(",") + 1);
 
@@ -124,18 +124,18 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		//int immediate = 0; -wall says this is unused
 
 		if (left_str[0] == 't')
-			left = &(*tempReg[number]);
+			left = &(tempReg[number]);
 		else
-			left = &(*saveReg[number]);
+			left = &(saveReg[number]);
 
 		string right_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
 		number = right_str[1] - '0';
 
 		if (right_str[0] == 't')
-			right = &(*tempReg[number]);
+			right = &(tempReg[number]);
 		else
-			right = &(*saveReg[number]);
+			right = &(saveReg[number]);
 
 		if (instruction == "beq") {
 			if (beq_(left, right))

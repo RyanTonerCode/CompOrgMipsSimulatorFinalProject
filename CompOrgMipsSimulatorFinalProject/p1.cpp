@@ -6,6 +6,8 @@
 #include <cstring>
 #include <math.h>
 #include "execution.h"
+#include "parser.h"
+#include "hazard_parser.h"
 
 using namespace std;
 
@@ -100,9 +102,14 @@ int main(int argc, char* argv[])
 		print_cycle();
 
 		//STEP ALL STAGE FORWARD ONE
+		//THIS is where all the EXECUTION AND WRITE BACK SHOULD HAPPEN
+		//		-add, or, and, slt should happen in here!
+		//		-bne, beq should happen here!
+		//		-hazarding should be initially checked here, but processed in the later for loop
 		for (unsigned int i = 0; i < pipeline.size(); i++) {
 			//cout << pipeline[i][cycle - 1] << '\n';
-			if (pipeline[i][cycle-1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
+			if (pipeline[i][cycle - 1] == 3) parse(pipeinstructions[i], sRegs, tRegs);
+			if (pipeline[i][cycle - 1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
 		}
 
 		//cout << "stepped\n";
