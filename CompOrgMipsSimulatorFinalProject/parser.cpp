@@ -16,6 +16,12 @@ void labelParse(string line, int lineNum) {
 	}
 }
 
+void labelLine(string line, int lineNum) {
+	if (line.at(line.length() - 2) == ':') {
+		labelMap[line.substr(0, line.length() - 2)] = lineNum;
+	}
+}
+
 //please dont pass me invalid data
 //note: the labelmap right now also has the lines of bne's and beq's with labels in them
 int getLabelLine(string label) {
