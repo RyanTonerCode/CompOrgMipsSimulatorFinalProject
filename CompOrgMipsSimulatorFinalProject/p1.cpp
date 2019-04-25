@@ -5,9 +5,11 @@
 #include <string>
 #include <cstring>
 #include <math.h>
+
 #include "execution.h"
 #include "parser.h"
 #include "hazard_parser.h"
+#include "pipeline.h"
 
 using namespace std;
 
@@ -20,23 +22,24 @@ void print_cycle(){
 void print_regs(int sRegs[8], int tRegs[10]){
 
 	for(int i = 0; i < 2; i++){
-		for(int j = 0; j < 4; j++){
+		for(int j = 0; j < 3; j++){
 			cout << "$s" << i * 4 + j << " = " << sRegs[i * 4 + j];
 			for (unsigned int k = 0; k < (14 - (std::to_string(sRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
+		cout << "$s" << i * 4 + 3 << " = " << sRegs[i * 4 + 3];
 		cout << endl;
 	}
 	for (int i = 0; i < 3; i++) {
 		
 		for (int j = 0; j < 4 && i <= 1; j++) {
 			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
-			for (unsigned int k = 0; k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; j != 3 && k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
 		for (int j = 0; j < 2 && i == 2; j++){
 			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
-			for (unsigned int k = 0; k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; j != 1 && k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
 		cout << endl;
@@ -44,8 +47,6 @@ void print_regs(int sRegs[8], int tRegs[10]){
 }
 int main(int argc, char* argv[])
 {
-
-
 	int tRegs[10];
 	for(int i = 0; i < 10; i++)
 		tRegs[i] = 0;
@@ -59,9 +60,9 @@ int main(int argc, char* argv[])
 	//cout << sRegs[0];
 
 	if (!strcmp(argv[1], "F"))
-	cout << "Start of Simulation (forwarding)" << endl;
+	cout << "START OF SIMULATION (forwarding)" << endl;
 	else
-		cout << "Start of Simulations (no forwarding)" << endl;
+		cout << "START OF SIMULATION (no forwarding)" << endl;
 
 	//bool forwarding = *argv[1] == 'F';
 	//cout << forwarding << endl;
@@ -154,10 +155,12 @@ int main(int argc, char* argv[])
 			cout << pipeinstructions[i];
 			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
 				cout << ' ';
-			for(unsigned int j = 0; j < 16; j++){
+			for(unsigned int j = 0; j < 15; j++){
 				std::cout.width(4);
+				std::cout.fill(' ');
 				cout << left << pipestages[pipeline[i][j]];
 			}
+			cout << pipestages[pipeline[i][15]];
 			cout << endl;
 		}
 

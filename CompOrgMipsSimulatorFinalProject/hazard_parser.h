@@ -1,7 +1,7 @@
 #ifndef parser
-
 #define hazard_parser
-#include <cstring>
 
+#include <string>
 
+bool dataHazard(std::string currentLine, std::string prevLine);
 #endif 

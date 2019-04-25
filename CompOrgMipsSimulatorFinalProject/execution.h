@@ -1,5 +1,5 @@
-#ifndef execution
-#define execution
+#ifndef execution_h
+#define execution_h
 void add_(int* destRegister, int* leftRegister, int* rightRegister);
 
 void addi_(int* destRegister, int* leftRegister, int immediate);
