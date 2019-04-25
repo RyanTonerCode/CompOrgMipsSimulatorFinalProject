@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 	vector<string> instructions;
 	string temp, temp2;
 	int labelcount = 0;
-	while(inputstream >> temp){
+	while(getline(inputstream, temp)){
 		if(temp.at(temp.length() - 2) == ':'){
 			instructions.push_back(temp);
 			labelcount++;
