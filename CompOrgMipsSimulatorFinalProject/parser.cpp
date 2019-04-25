@@ -14,6 +14,7 @@ int labelParse(string line) {
 		string label = line.substr(line.find_last_of(",") + 1);
 		return getLabelLine(line);
 	}
+	return -1;
 }
 
 //sets the map for a label line with a colon

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef pipeline_h
+#define pipeline_h
 class pipeline
 {
 public:
@@ -6,3 +7,4 @@ public:
 	~pipeline();
 };
 
+#endif
