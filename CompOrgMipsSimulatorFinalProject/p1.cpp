@@ -15,14 +15,14 @@ void print_line() {
 	cout << "----------------------------------------------------------------------------------" << '\n';
 }
 void print_cycle(){
-	cout << "CPU Cycles ===>     1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16" << endl;
+	cout << "CPU Cycles ===>     1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16" << endl;
 }
 void print_regs(int sRegs[8], int tRegs[10]){
 
 	for(int i = 0; i < 2; i++){
 		for(int j = 0; j < 4; j++){
 			cout << "$s" << i * 4 + j << " = " << sRegs[i * 4 + j];
-			for (unsigned int k = 0; k < (13 - (std::to_string(sRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; k < (14 - (std::to_string(sRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
 		cout << endl;
@@ -31,12 +31,12 @@ void print_regs(int sRegs[8], int tRegs[10]){
 		
 		for (int j = 0; j < 4 && i <= 1; j++) {
 			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
-			for (unsigned int k = 0; k < (13 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
 		for (int j = 0; j < 2 && i == 2; j++){
 			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
-			for (unsigned int k = 0; k < (13 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; k < (14 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
 				std::cout << ' ';
 		}
 		cout << endl;
@@ -151,11 +151,13 @@ int main(int argc, char* argv[])
 			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
 				cout << ' ';
 			for(unsigned int j = 0; j < 16; j++){
-				std::cout.width(5);
+				std::cout.width(4);
 				cout << left << pipestages[pipeline[i][j]];
 			}
 			cout << endl;
 		}
+
+		cout << endl;
 
 		cycle++;
 		stackpointer++;
