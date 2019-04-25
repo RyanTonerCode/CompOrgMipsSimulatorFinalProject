@@ -70,14 +70,18 @@ int main(int argc, char* argv[])
 	vector<string> instructions;
 	string temp, temp2;
 	int labelcount = 0;
+	int lineCount = 0;
 	while(inputstream >> temp){
 		if(temp.at(temp.length() - 2) == ':'){
+			//indicates a label
+			labelLine(temp, lineCount);
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
 			inputstream >> temp2;
 			instructions.push_back(temp + ' ' + temp2);
 		}
+		lineCount++;
 	}
 
 	//for (unsigned int i = 0; i < instructions.size(); i++)
@@ -102,7 +106,7 @@ int main(int argc, char* argv[])
 	unsigned int total = instructions.size() - labelcount + 4;  //step where final instruction executes, updates as the program hazards
 	unsigned int cycle = 0;										//this is which (out of 16) cycle we're on now
 	unsigned int stackpointer = 0;								//this is which line we are on
-	while(cycle != total){
+	while(cycle != total && cycle < 17){
 		print_line();
 		print_cycle();
 
