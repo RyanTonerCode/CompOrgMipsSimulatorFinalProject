@@ -14,13 +14,13 @@ void labelParse(string line, int lineNum) {
 		string label = line.substr(line.find_last_of(",") + 1);
 		//question: will substring retain the newline character?
 		//that'd throw off the label, since it should have a colon and no newline
-		labelMap.insert_or_assign(label, lineNum);
+		labelMap[label] = lineNum;
 	}
 }
 
 void labelLine(string line, int lineNum) {
 	if (line.at(line.length() - 2) == ':') {
-		labelMap.[line.substr(0, line.length()-2)] = lineNum;
+		labelMap[line.substr(0, line.length()-2)] = lineNum;
 	}
 }
 
