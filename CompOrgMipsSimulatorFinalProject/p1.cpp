@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <math.h>
 #include "execution.h"
 
 using namespace std;
@@ -47,7 +48,7 @@ int main(int argc, char* argv[])
 	
 	and_(&sRegs[0], &tRegs[0], &tRegs[1]);
 
-	cout << sRegs[0];
+	//cout << sRegs[0];
 
 	
 	if (!strcmp(argv[1], "F"))
@@ -55,15 +56,15 @@ int main(int argc, char* argv[])
 	else
 		cout << "Start of Simulations (no forwarding)" << endl;
 
-	bool forwarding = *argv[1] == 'F';
-	cout << forwarding << endl;
+	//bool forwarding = *argv[1] == 'F';
+	//cout << forwarding << endl;
 
 	ifstream inputstream(argv[2]);
 	vector<string> instructions;
 	string temp, temp2;
 	int labelcount = 0;
 	while(inputstream >> temp){
-		if(temp.at(temp.length()) == ':'){
+		if(temp.at(temp.length() - 2) == ':'){
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
@@ -71,7 +72,12 @@ int main(int argc, char* argv[])
 			instructions.push_back(temp + ' ' + temp2);
 		}
 	}
-	
+
+	//for (unsigned int i = 0; i < instructions.size(); i++)
+		//cout << instructions[i] << '\n';
+
+	//cout << "made it to pipeline's start\n";
+
 	vector<vector<int> > pipeline;					//A vector-vector of the cycles' stage
 	vector<string> pipeinstructions;		//A vector of the pipe's instruction
 	// for(unsigned int i = 0; i < instructions.size(); i++){
@@ -86,41 +92,64 @@ int main(int argc, char* argv[])
 	string pipestages[7] = {"IF", "ID", "EX", "MEM", "WB", ".", "*" };
 	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
 
-	unsigned int total = instructions.size() - labelcount + 4; //step where final instruction executes
-	unsigned int cycle = 0;
-	unsigned int stackpointer = 0;
+	unsigned int total = instructions.size() - labelcount + 4;  //step where final instruction executes, updates as the program hazards
+	unsigned int cycle = 0;										//this is which (out of 16) cycle we're on now
+	unsigned int stackpointer = 0;								//this is which line we are on
 	while(cycle != total){
 		print_line();
 		print_cycle();
 
-		pipeinstructions.push_back(instructions[stackpointer]);
-		pipeline.push_back(vector<int>());
-		if(instructions[stackpointer].at(instructions[stackpointer].length()) == ':')
-			stackpointer++;
-		//what is i here? pipeinstructions[i] = instructions[stackpointer];
-		for(int i = 0; i < 16; i++)
-			pipeline[i].push_back(5);
+		//STEP ALL STAGE FORWARD ONE
+		for (unsigned int i = 0; i < pipeline.size(); i++) {
+			//cout << pipeline[i][cycle - 1] << '\n';
+			if (pipeline[i][cycle-1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
+		}
 
-		for(unsigned int i = 0; i < cycle; i++){
-			if(pipeline[cycle][17] == 6){
+		//cout << "stepped\n";
+
+		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
+		if (stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':')
+			while(stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':') stackpointer++;
+
+		//cout << "instruction found\n";
+		if (stackpointer < instructions.size()) {
+			pipeinstructions.push_back(instructions[stackpointer]);
+			pipeline.push_back(vector<int>());
+
+			//cout << "push backed a pipeline\n";
+
+			//what is i here? pipeinstructions[i] = instructions[stackpointer];
+			for (int i = 0; i < 16; i++)
+				pipeline[pipeline.size() - 1].push_back(5);
+			pipeline[pipeline.size() - 1][cycle] = 0;
+		}
+
+		for(unsigned int i = 0; i < pipeline.size(); i++){
+			if(pipeline[i][cycle] == 6){
 				//TODO if() DO CONTROL HAZARD HERE
 				//note: "6" may not indicate just a control hazard, it can represent a data hazard for non-forwarding
 			}
 		}
 
-		for(unsigned int i = 0; i <= pipeline.size(); i++){
+		//cout << "past hazard\n";
+
+		//Print full new pipeline
+		for(unsigned int i = 0; i < pipeline.size(); i++){
 			cout << pipeinstructions[i];
+			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
+				cout << ' ';
 			for(unsigned int j = 0; j < 16; j++){
-				std::cout.width(4);
+				std::cout.width(5);
 				cout << left << pipestages[pipeline[i][j]];
 			}
 			cout << endl;
 		}
+
 		cycle++;
 		stackpointer++;
 		print_regs(sRegs, tRegs);
 	}
 
 
-
+	cout << "----------------------------------------------------------------------------------\nEND OF SIMULATION\n";
 }

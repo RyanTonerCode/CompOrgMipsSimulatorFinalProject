@@ -6,17 +6,26 @@ using namespace std;
 
 std::map<string, int> labelMap;
 
-//associate a label with a line number
+//associate a label with a line number, for beq's and bne's
 void labelParse(string line, int lineNum) {
 	string instruction = line.substr(0, line.find(" "));
 
 	if (instruction == "bne" || instruction == "beq") {
 		string label = line.substr(line.find_last_of(",") + 1);
+		//question: will substring retain the newline character?
+		//that'd throw off the label, since it should have a colon and no newline
 		labelMap[label] = lineNum;
 	}
 }
 
+void labelLine(string line, int lineNum) {
+	if (line.at(line.length() - 2) == ':') {
+		labelMap[line.substr(0, line.length()-2)] = lineNum;
+	}
+}
+
 //please dont pass me invalid data
+//note: the labelmap right now also has the lines of bne's and beq's with labels in them
 int getLabelLine(string label) {
 	return labelMap[label];
 }
