@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 	string temp, temp2;
 	int labelcount = 0;
 	while(inputstream >> temp){
-		if(temp.at(temp.length()) == ':'){
+		if(temp.at(temp.length() - 2) == ':'){
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
 		pipeinstructions.push_back(instructions[stackpointer]);
 		pipeline.push_back(vector<int>());
-		if(instructions[stackpointer].at(instructions[stackpointer].length()) == ':')
+		if(instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':')
 			stackpointer++;
 		//what is i here? pipeinstructions[i] = instructions[stackpointer];
 		for(int i = 0; i < 16; i++)
