@@ -35,6 +35,8 @@ int getLabelLine(string label) {
 //returns true for branching
 bool parse(string line, int saveReg[8], int tempReg[10]) {
 
+	int zero = 0;
+
 	string instruction = line.substr(0, line.find(" "));
 
 		
@@ -57,8 +59,10 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		if (reg1_str[0] == 't')
 			reg1 = &(tempReg[number]);
-		else
+		else if (reg1_str[0] == 's')
 			reg1 = &(saveReg[number]);
+		else
+			reg1 = &zero;
 
 		string reg2_str = line.substr(line.find(","));
 		reg2_str = line.substr(line.find("$") + 1, line.find(","));
@@ -67,8 +71,10 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		if (reg2_str[0] == 't')
 			reg2 = &(tempReg[number]);
-		else
+		else if (reg2_str[0] == 's')
 			reg2 = &(saveReg[number]);
+		else
+			reg2 = &zero;
 
 		if(instruction == "add")
 			add_(dest, reg1, reg2);
@@ -99,8 +105,10 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		if (reg1_str[0] == 't')
 			reg1 = &(tempReg[number]);
-		else
+		else if (reg1_str[0] == 's')
 			reg1 = &(saveReg[number]);
+		else
+			reg1 = &zero;
 
 		string imm_str = line.substr(line.find_last_of(",") + 1);
 
@@ -125,8 +133,10 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		if (left_str[0] == 't')
 			left = &(tempReg[number]);
-		else
+		else if (left_str[0] == 's')
 			left = &(saveReg[number]);
+		else
+			left = &zero;
 
 		string right_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
@@ -134,8 +144,10 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		if (right_str[0] == 't')
 			right = &(tempReg[number]);
-		else
+		else if (right_str[0] == 's')
 			right = &(saveReg[number]);
+		else
+			right = &zero;
 
 		if (instruction == "beq") {
 			if (beq_(left, right))

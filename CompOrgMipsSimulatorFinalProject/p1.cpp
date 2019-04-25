@@ -53,15 +53,11 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < 8; i++)
 		sRegs[i] = 0; 
 
-
-	tRegs[0] = 1;
-	tRegs[1] = 1;
-	
-	and_(&sRegs[0], &tRegs[0], &tRegs[1]);
-
+	//tRegs[0] = 1;
+	//tRegs[1] = 1;
+	//and_(&sRegs[0], &tRegs[0], &tRegs[1]);
 	//cout << sRegs[0];
 
-	
 	if (!strcmp(argv[1], "F"))
 	cout << "Start of Simulation (forwarding)" << endl;
 	else

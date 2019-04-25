@@ -1,4 +1,5 @@
 #include "execution.h"
+#include <iostream>
 
 void add_(int* destRegister, int* leftRegister, int* rightRegister) {
 	*destRegister = *leftRegister + *rightRegister;
