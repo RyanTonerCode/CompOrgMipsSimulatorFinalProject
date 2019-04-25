@@ -44,7 +44,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		string dest_str = line.substr(line.find("$")+1, line.find(","));
 
-		int number = dest_str[0] - '0';
+		int number = dest_str[1] - '0';
 
 		int* dest, *reg1, *reg2;
 
