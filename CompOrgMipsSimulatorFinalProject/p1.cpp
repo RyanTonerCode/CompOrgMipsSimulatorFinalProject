@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-
+#include <cstring>
 #include "execution.h"
 
 using namespace std;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 	string temp, temp2;
 	int labelcount = 0;
 	while(inputstream >> temp){
-		if(temp[temp.length] == ':'){
+		if(temp.at(temp.length()) == ':'){
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 		print_cycle();
 
 		pipeinstructions.push_back(vector<string>());
-		if(instructions[stackpointer][instructions[stackpointer].length] == ':')
+		if(instructions[stackpointer].at(instructions[stackpointer].length()) == ':')
 			stackpointer++;
 		//what is i here? pipeinstructions[i] = instructions[stackpointer];
 		for(int i = 0; i < 16; i++)

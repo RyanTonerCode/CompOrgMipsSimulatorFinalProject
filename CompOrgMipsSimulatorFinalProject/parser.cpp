@@ -12,7 +12,7 @@ void labelParse(string line, int lineNum) {
 
 	if (instruction == "bne" || instruction == "beq") {
 		string label = line.substr(line.find_last_of(",") + 1);
-		labelMap._Insert_or_assign(label, lineNum);
+		labelMap.insert_or_assign(label, lineNum);
 	}
 }
 
