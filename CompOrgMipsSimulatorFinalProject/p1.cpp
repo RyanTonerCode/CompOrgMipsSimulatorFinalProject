@@ -20,16 +20,25 @@ void print_cycle(){
 void print_regs(int sRegs[8], int tRegs[10]){
 
 	for(int i = 0; i < 2; i++){
-		for(int j = 0; j < 4; j++)
-			cout << "$s" << i * 4 + j << " = " << sRegs[i * 4 + j] << "\t\t";
+		for(int j = 0; j < 4; j++){
+			cout << "$s" << i * 4 + j << " = " << sRegs[i * 4 + j];
+			for (unsigned int k = 0; k < (13 - (std::to_string(sRegs[i * 4 + j])).length()); k++)
+				std::cout << ' ';
+		}
 		cout << endl;
 	}
 	for (int i = 0; i < 3; i++) {
 		
-		for (int j = 0; j < 4 && i <= 1; j++) 
-			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j] << "\t\t";
-		for (int j = 0; j < 2 && i == 2; j++)
-			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j] << "\t\t";
+		for (int j = 0; j < 4 && i <= 1; j++) {
+			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
+			for (unsigned int k = 0; k < (13 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+				std::cout << ' ';
+		}
+		for (int j = 0; j < 2 && i == 2; j++){
+			std::cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
+			for (unsigned int k = 0; k < (13 - (std::to_string(tRegs[i * 4 + j])).length()); k++)
+				std::cout << ' ';
+		}
 		cout << endl;
 	}
 }
