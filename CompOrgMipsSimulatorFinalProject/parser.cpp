@@ -33,7 +33,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 
 		string dest_str = line.substr(line.find("$")+1, line.find(","));
 
-		int number = atoi((const char*)dest_str[1]);
+		int number = dest_str[0] - '0';
 
 		int* dest, *reg1, *reg2;
 
@@ -44,7 +44,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 
 		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
-		number = atoi((const char*)reg1_str[1]);
+		number = reg1_str[1] - '0';
 
 		if (reg1_str[0] == 't')
 			reg1 = &(*tempReg[number]);
@@ -54,7 +54,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		string reg2_str = line.substr(line.find(","));
 		reg2_str = line.substr(line.find("$") + 1, line.find(","));
 
-		number = atoi((const char*)reg2_str[1]);
+		number = reg2_str[1] - '0';
 
 		if (reg2_str[0] == 't')
 			reg2 = &(*tempReg[number]);
@@ -74,7 +74,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 		
 		string dest_str = line.substr(line.find("$") + 1, line.find(","));
 
-		int number = atoi((const char*)dest_str[1]);
+		int number = dest_str[1] - '0';
 
 		int* dest, * reg1;
 		int immediate = 0;
@@ -86,7 +86,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 
 		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
-		number = atoi((const char*)reg1_str[1]);
+		number = reg1_str[1] - '0';
 
 		if (reg1_str[0] == 't')
 			reg1 = &(*tempReg[number]);
@@ -109,7 +109,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 	else if (instruction == "bne" || instruction == "beq") {
 		string left_str = line.substr(line.find("$") + 1, line.find(","));
 
-		int number = atoi((const char*)left_str[1]);
+		int number = left_str[1] - '0';
 
 		int* left, * right;
 		//int immediate = 0; -wall says this is unused
@@ -121,7 +121,7 @@ bool parse(string line, int* saveReg[8], int* tempReg[10]) {
 
 		string right_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
 
-		number = atoi((const char*)right_str[1]);
+		number = right_str[1] - '0';
 
 		if (right_str[0] == 't')
 			right = &(*tempReg[number]);
