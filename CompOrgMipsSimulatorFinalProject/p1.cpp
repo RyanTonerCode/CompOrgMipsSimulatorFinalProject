@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 
 	unsigned int total = instructions.size() - labelcount + 4;  //step where final instruction executes, updates as the program hazards
 	unsigned int cycle = 0;										//this is which (out of 16) cycle we're on now
-	unsigned int stackpointer = 0;								//this is which line we are on
+	unsigned int instructionIterator = 0;								//this is which line we are on
 	while(cycle != total && cycle < 17){
 		print_line();
 		print_cycle();
@@ -140,12 +140,12 @@ int main(int argc, char* argv[])
 		//cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
-		while(stackpointer < instructions.size() && isLabel(instructions[stackpointer])) 
-			stackpointer++;
+		while(instructionIterator < instructions.size() && isLabel(instructions[instructionIterator])) 
+			instructionIterator++;
 
 		//cout << "instruction found\n";
-		if (stackpointer < instructions.size()) {
-			pipeinstructions.push_back(instructions[stackpointer]);
+		if (instructionIterator < instructions.size()) {
+			pipeinstructions.push_back(instructions[instructionIterator]);
 			pipeline.push_back(vector<int>());
 
 			//cout << "push backed a pipeline\n";
@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 		cout << endl;
 
 		cycle++;
-		stackpointer++;
+		instructionIterator++;
 		print_regs(sRegs, tRegs);
 	}
 
