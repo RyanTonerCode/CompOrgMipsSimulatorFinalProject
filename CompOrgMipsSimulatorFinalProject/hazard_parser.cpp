@@ -6,6 +6,10 @@ using namespace std;
 //make sure you only check at the right pipleline stage w.r.t. forwarding if necessary too
 bool dataHazard(string currentLine, string prevLine) {
 	
+	if (prevLine == "nop" || currentLine == "nop") {
+		return false;
+	}
+
 	//only need the destination of the previous line
 	string dest_str = prevLine.substr(prevLine.find("$"), prevLine.find(",") - prevLine.find_first_of("$"));
 

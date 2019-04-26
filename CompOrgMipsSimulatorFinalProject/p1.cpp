@@ -105,53 +105,93 @@ int main(int argc, char* argv[])
 			//calculate the amount of hazard offset needed
 			unsigned int hazard_offset = 0;
 
-			if (pipeline[i][cycle - 1] + 1 == 1) {//only on ID check for hazards
+			if (pipeline[i][cycle - 1] + 1 <= 2 && pipeinstructions[i] != "nop") {//only on ID check for hazards
+
+				int realLines = 0;
 
 				//hazard detection (only when forwarding is false)
-				for (int j = i - 1; j >= ((int)i - 2) && j >= 0 && !forwarding; j--) {
-					//cout << "uh oh";
-					unsigned int difference = 3 - (i - j);
+				for (int j = i - 1; j >= 0 && !forwarding; j--) {
 
-					bool hazardFound = dataHazard(pipeinstructions[i], pipeinstructions[j]);
+					if (pipeinstructions[j] != "nop") {
+						realLines++;
 
-					if (hazardFound && difference > hazard_offset) {
+						unsigned int difference = 3 - (i - (i-realLines));
 
-						//cout << "asdfhasdgjas\n\n\n";
+						bool hazardFound = dataHazard(pipeinstructions[i], pipeinstructions[j]);
 
-						hazard_offset = difference;
-						if (hazard_offset == 2) {
-							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
-							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
+						if (hazardFound && difference > hazard_offset && realLines <= 2 && pipeline[j][cycle] != 5) {
 
-							pipeline.insert(pipeline.begin() + i, vector<int>());
-							pipeline.insert(pipeline.begin() + i, vector<int>());
+							//cout << "asdfhasdgjas\n\n\n";
 
-							for (int k = 0; k < 16; k++) {
-								pipeline[i].push_back(5);
-								pipeline[i + 1].push_back(5);
+							hazard_offset = difference;
+							if (pipeinstructions[i-1] != "nop") { //need nops
+								if (hazard_offset == 2) {
+									pipeinstructions.insert(pipeinstructions.begin() + i, "nop");
+									pipeinstructions.insert(pipeinstructions.begin() + i, "nop");
+
+									pipeline.insert(pipeline.begin() + i, vector<int>());
+									pipeline.insert(pipeline.begin() + i, vector<int>());
+
+									for (unsigned int k = 0; k < 16; k++) {
+										if (k < cycle) {
+											pipeline[i].push_back(5);
+											pipeline[i + 1].push_back(5);
+										}
+										else {
+											pipeline[i].push_back(5);
+											pipeline[i + 1].push_back(5);
+										}
+									}
+									pipeline[i][cycle - 2] = 0;
+									pipeline[i][cycle - 1] = 1;
+									pipeline[i][cycle] = 7;
+									pipeline[i + 1][cycle - 2] = 0;
+									pipeline[i + 1][cycle - 1] = 1;
+									pipeline[i + 1][cycle] = 7;
+								}
+								else if (hazard_offset == 1) {
+									pipeinstructions.insert(pipeinstructions.begin() + i, "nop");
+									pipeline.insert(pipeline.begin() + i, vector<int>());
+									for (unsigned int k = 0; k < 16; k++) {
+										if (k < cycle) {
+											pipeline[i].push_back(5);
+										}
+										else {
+											pipeline[i].push_back(5);
+										}
+									}
+									pipeline[i][cycle - 2] = 0;
+									pipeline[i][cycle - 1] = 1;
+									pipeline[i][cycle] = 7;
+
+								}
+								i += hazard_offset; //increment i so it actually points to the instruction still.
+								pipelineSize += hazard_offset;
+								total += 1;
 							}
 						}
-						else if (hazard_offset == 1) {
-							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
-							pipeline.insert(pipeline.begin() + i, vector<int>());
-							for (int k = 0; k < 16; k++)
-								pipeline[i].push_back(5);
-							
-						}
-						i += hazard_offset; //increment i so it actually points to the instruction still.
-						pipelineSize += hazard_offset;
 					}
 				}
 			}
 
-			int nothingbuger = 0;
-
 			if (hazard_offset == 0) { //DO NOT PARSE
-				//Perform STEPPING here
-				if (pipeline[i][cycle - 1] == 3)
-					parse(pipeinstructions[i], sRegs, tRegs);
-				if (pipeline[i][cycle - 1] < 4)
-					pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
+				if (pipeinstructions[i] != "nop") {
+					//Perform STEPPING here
+					if (pipeline[i][cycle - 1] == 3)
+						parse(pipeinstructions[i], sRegs, tRegs);
+					if (pipeline[i][cycle - 1] < 4)
+						pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
+				}
+				else {
+					if (pipeline[i][cycle - 1] == 7)
+						pipeline[i][cycle] = 7;
+				}
+			}
+			else {
+				if (pipeline[i][cycle - 1] + 1 == 1)
+					pipeline[i][cycle] = 1;
+				else
+					pipeline[i][cycle] = pipeline[i][cycle - 1]; //stall
 			}
 		}
 
@@ -199,13 +239,13 @@ int main(int argc, char* argv[])
 			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
 				cout << ' ';
 
-			if (pipeinstructions[i] == "NOP") {
+			if (pipeinstructions[i] == "nop") {
 				//manage printing nops around here: need IF and ID and * in single print
 				if (pipeline[i][cycle - 1] == 6) { //this updating only happens ONCE!
 					//here print IF and ID and *
-					pipeline[i][cycle - 3] = 0; //IF
-					pipeline[i][cycle - 2] = 1; //ID
-					pipeline[i][cycle - 1] = 7; //end star so it won't happen again
+					//pipeline[i][cycle - 3] = 0; //IF
+					//pipeline[i][cycle - 2] = 1; //ID
+					//pipeline[i][cycle - 1] = 7; //end star so it won't happen again
 				}
 			}
 
