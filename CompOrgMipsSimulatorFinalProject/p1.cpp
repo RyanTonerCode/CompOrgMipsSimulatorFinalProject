@@ -124,11 +124,10 @@ int main(int argc, char* argv[])
 				int difference = i - j;
 				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
 					hazard_offset = difference;
-					if (hazard_offset > 0) {
-						//"if there's datahazard, create stalls and/or nops here here:
-						//ryan or whoever else, CREATE the stalls in THIS if statement!
-
-					}
+					if (hazard_offset >= 2)
+						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+					if(hazard_offset >= 1)
+						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
 				}
 				//cout << "\nwoohoo\n";
 			}
@@ -141,8 +140,8 @@ int main(int argc, char* argv[])
 		//cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
-		if (stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':')
-			while(stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':') stackpointer++;
+		while(stackpointer < instructions.size() && isLabel(instructions[stackpointer])) 
+			stackpointer++;
 
 		//cout << "instruction found\n";
 		if (stackpointer < instructions.size()) {
