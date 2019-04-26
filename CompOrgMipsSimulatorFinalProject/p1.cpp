@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 	// 	}
 	// }
  
-	string pipestages[7] = {"IF", "ID", "EX", "MEM", "WB", ".", "*" };
+	string pipestages[8] = {"IF", "ID", "EX", "MEM", "WB", ".", "*", "*" };
 	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
 
 	unsigned int total = instructions.size() - labelcount + 4;  //step where final instruction executes, updates as the program hazards
@@ -124,10 +124,17 @@ int main(int argc, char* argv[])
 				int difference = i - j;
 				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
 					hazard_offset = difference;
-					if (hazard_offset >= 2)
+					if (hazard_offset >= 2) {
 						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
-					if(hazard_offset >= 1)
 						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+
+						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+					}
+					if (hazard_offset >= 1) {
+						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+					}
 				}
 				//cout << "\nwoohoo\n";
 			}
