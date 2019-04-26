@@ -91,35 +91,46 @@ int main(int argc, char* argv[])
 		print_line();
 		print_cycle();
 
+
+		unsigned int pipelineSize = pipeline.size();
+
 		//STEP ALL STAGE FORWARD ONE
 		//THIS is where all the EXECUTION AND WRITE BACK SHOULD HAPPEN
 		//		-add, or, and, slt should happen in here!
 		//		-bne, beq should happen here!
 		//		-hazarding should be initially checked here, but processed in the later for loop
-		for (unsigned int i = 0; i < pipeline.size(); i++) {
+		for (unsigned int i = 0; i < pipelineSize; i++) {
 			//cout << pipeline[i][cycle - 1] << '\n';
 
 			//calculate the amount of hazard offset needed
 			int hazard_offset = 0;
 
-			//hazard detection (only when forwarding is false)
-			for (int j = i - 1; j >= i - 2 && j >= 0 && forwarding == false; j--) {
-				//cout << "uh oh";
-				int difference = i - j;
-				if ( dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
-					hazard_offset = difference;
-					if (hazard_offset == 2) {
-						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
-						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+			if (pipeline[i][cycle - 1] + 1 == 1) {//only on ID check for hazards
 
-						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
-						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+				//hazard detection (only when forwarding is false)
+				for (int j = i - 1; j >= ((int)i - 2) && j >= 0 && !forwarding; j--) {
+					//cout << "uh oh";
+					int difference = 3 - i - j;
+
+					if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
+
+						cout << "asdfhasdgjas\n\n\n";
+
+						hazard_offset = difference;
+						if (hazard_offset == 2) {
+							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+
+							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+						}
+						else if (hazard_offset == 1) {
+							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+						}
+						i += hazard_offset; //increment i so it actually points to the instruction still.
+						pipelineSize += hazard_offset;
 					}
-					else if (hazard_offset == 1) {
-						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
-						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
-					}
-					i += hazard_offset; //increment i so it actually points to the instruction still.
 				}
 			}
 
