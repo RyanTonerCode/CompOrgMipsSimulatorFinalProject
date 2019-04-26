@@ -118,8 +118,8 @@ int main(int argc, char* argv[])
 			//calculate the amount of hazard offset needed
 			int hazard_offset = -1;
 			//hazard detection
-			for (unsigned int j = i - 1; j >= 0; j--) {
-				int difference = 4 - pipeline[i][cycle - 1] - pipeline[j][cycle - 1];
+			for (unsigned int j = i - 1; j >= i-2 && j >= 0; j--) {
+				int difference = 3 - (i - j);
 				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
 					hazard_offset = difference;
 				}
