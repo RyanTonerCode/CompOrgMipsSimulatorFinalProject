@@ -1,4 +1,5 @@
 ori $s1,$zero,451
+loop:
 addi $t2,$t2,73
 slti $t4,$s1,453
 addi $s1,$s1,1

@@ -81,6 +81,8 @@ int main(int argc, char* argv[])
 	vector<vector<int> > pipeline;	  //[instruction][cycle] = stage
 	vector<string> pipeinstructions;  //[index]=instruction
  
+	int controlLimit = -1;
+
 	//8 begins jump stall
 	string pipestages[12] = {"IF", "ID", "EX", "MEM", "WB", ".", "*", "*", "*", "*", "*", "*" };
 	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
@@ -101,7 +103,7 @@ int main(int argc, char* argv[])
 		//		-add, or, and, slt should happen in here!
 		//		-bne, beq should happen here!
 		//		-hazarding should be initially checked here, but processed in the later for loop
-		for (unsigned int i = 0; i < pipelineSize; i++) {
+		for (unsigned int i = 0; i < pipelineSize && (controlLimit == -1 || (int)i < controlLimit) && i < 16; i++) {
 			//cout << pipeline[i][cycle - 1] << '\n';
 
 			//calculate the amount of hazard offset needed
@@ -192,19 +194,25 @@ int main(int argc, char* argv[])
 
 							int labelline = labelParse(pipeinstructions[i]);
 
+							int curSize = pipeinstructions.size();
+							if (controlLimit != -1)
+								curSize = controlLimit;
+
 							for (unsigned int j = labelline; j < instructions.size(); j++) {
 								if (!isLabel(instructions[j])) {
 									pipeinstructions.push_back(instructions[j]); //add all lines after label.
 									total += 1;
-									pipelineSize = pipeline.size();
+									
 
 									pipeline.push_back(vector<int>());
 									for (int k = 0; k < 16; k++)
 										pipeline[pipeline.size() - 1].push_back(5);
+									//pipeline[pipeline.size() - 1][cycle + j - labelline - 1] = 0;
 
 								}
 							}
-							//int end = 5;
+							pipeline[curSize][cycle] = 0;
+							controlLimit = curSize++;
 						}
 					}
 					if (pipeline[i][cycle] >= 8) {}//do nothing
@@ -274,8 +282,12 @@ int main(int argc, char* argv[])
 
 		//cout << "past hazard\n";
 
+		if (controlLimit != -1 && controlLimit < (int)pipeline.size()) {
+			pipeline[controlLimit][cycle] = 0;
+		}
+
 		//Print full new pipeline
-		for(unsigned int i = 0; i < pipeline.size(); i++){
+		for(unsigned int i = 0; i < pipeline.size() && (controlLimit == -1 || (int)i <= controlLimit) && i < 16; i++){
 
 			//print the current instruction
 			cout << pipeinstructions[i];
@@ -306,6 +318,10 @@ int main(int argc, char* argv[])
 		}
 
 		cout << endl;
+
+		if (controlLimit != -1 && controlLimit < (int)pipeline.size()) {
+			controlLimit++;
+		}
 
 		cycle++;
 		instructionIterator++;
