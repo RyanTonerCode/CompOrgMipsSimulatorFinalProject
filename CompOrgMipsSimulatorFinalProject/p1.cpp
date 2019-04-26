@@ -116,22 +116,28 @@ int main(int argc, char* argv[])
 			//cout << pipeline[i][cycle - 1] << '\n';
 
 			//calculate the amount of hazard offset needed
-			int hazard_offset = -1;
+			int hazard_offset = 0;
 			//hazard detection
-			for (unsigned int j = i - 1; j >= 0; j--) {
-				int difference = 4 - pipeline[i][cycle - 1] - pipeline[j][cycle - 1];
+			for (int j = i - 1; j >= 0; j--) {
+				//cout << "uh oh";
+				int difference = i - j;
 				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
 					hazard_offset = difference;
+					if (hazard_offset > 0) {
+						//"if there's datahazard, create stalls and/or nops here here:
+						//ryan or whoever else, CREATE the stalls in THIS if statement!
+
+					}
 				}
+				//cout << "\nwoohoo\n";
 			}
 
-			//HANDLE NOPS
-
+			//Perform STEPPING here
 			if (pipeline[i][cycle - 1] == 3) parse(pipeinstructions[i], sRegs, tRegs);
 			if (pipeline[i][cycle - 1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
 		}
 
-		//cout << "stepped\n";
+		cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
 		if (stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':')
@@ -142,7 +148,7 @@ int main(int argc, char* argv[])
 			pipeinstructions.push_back(instructions[stackpointer]);
 			pipeline.push_back(vector<int>());
 
-			//cout << "push backed a pipeline\n";
+			cout << "push backed a pipeline\n";
 
 			//what is i here? pipeinstructions[i] = instructions[stackpointer];
 			for (int i = 0; i < 16; i++)
@@ -157,7 +163,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		//cout << "past hazard\n";
+		cout << "past hazard\n";
 
 		//Print full new pipeline
 		for(unsigned int i = 0; i < pipeline.size(); i++){
