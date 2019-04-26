@@ -81,11 +81,6 @@ int main(int argc, char* argv[])
 		lineCount++;
 	}
 
-	//for (unsigned int i = 0; i < instructions.size(); i++)
-		//cout << instructions[i] << '\n';
-
-	//cout << "made it to pipeline's start\n";
-
 	vector<vector<int> > pipeline;					//A vector-vector of the cycles' stage
 	vector<string> pipeinstructions;		//A vector of the pipe's instruction
 
@@ -139,9 +134,13 @@ int main(int argc, char* argv[])
 				//cout << "\nwoohoo\n";
 			}
 
-			//Perform STEPPING here
-			if (pipeline[i][cycle - 1] == 3) parse(pipeinstructions[i], sRegs, tRegs);
-			if (pipeline[i][cycle - 1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
+			if (hazard_offset == 0) { //DO NOT PARSE
+				//Perform STEPPING here
+				if (pipeline[i][cycle - 1] == 3)
+					parse(pipeinstructions[i], sRegs, tRegs);
+				if (pipeline[i][cycle - 1] < 4)
+					pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
+			}
 		}
 
 		//cout << "stepped\n";
@@ -174,12 +173,24 @@ int main(int argc, char* argv[])
 
 		//Print full new pipeline
 		for(unsigned int i = 0; i < pipeline.size(); i++){
+
 			cout << pipeinstructions[i];
 			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
 				cout << ' ';
 			for(unsigned int j = 0; j < 15; j++){
 				std::cout.width(4);
 				std::cout.fill(' ');
+
+				if (pipeinstructions[i] == "NOP") {
+					//manage printing nops around here: need IF and ID and * in single print
+					if (pipeline[i][cycle - 1] == 6) {
+						//here print IF and ID and *
+					}
+					else {
+						//here only print the *
+					}
+				}
+
 				cout << left << pipestages[pipeline[i][j]];
 			}
 			cout << pipestages[pipeline[i][15]];
