@@ -16,7 +16,7 @@ int labelParse(string line) {
 
 	if (instruction == "bne" || instruction == "beq") {
 		string label = line.substr(line.find_last_of(",") + 1);
-		return getLabelLine(line);
+		return getLabelLine(label);
 	}
 	return -1;
 }
@@ -30,7 +30,7 @@ void labelLine(string line, int lineNum) {
 //please dont pass me invalid data
 //note: the labelmap right now also has the lines of bne's and beq's with labels in them
 int getLabelLine(string label) {
-	return labelMap[label];
+	return labelMap.at(label);
 }
 
 //this parser is for writeback

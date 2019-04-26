@@ -68,26 +68,27 @@ int main(int argc, char* argv[])
 	int lineCount = 0;
 	while(inputstream >> temp){
 		if(isLabel(temp)){
-			labelLine(temp, lineCount);
+			labelLine(temp, lineCount); //label set as next line
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
 			inputstream >> temp2;
 			instructions.push_back(temp + ' ' + temp2);
+			lineCount++; //only increment for real lines
 		}
-		lineCount++;
 	}
 
 	vector<vector<int> > pipeline;	  //[instruction][cycle] = stage
 	vector<string> pipeinstructions;  //[index]=instruction
  
-	string pipestages[8] = {"IF", "ID", "EX", "MEM", "WB", ".", "*", "*" };
+	//8 begins jump stall
+	string pipestages[12] = {"IF", "ID", "EX", "MEM", "WB", ".", "*", "*", "*", "*", "*", "*" };
 	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
 
 	unsigned int total = instructions.size() - labelcount + 4;  //step where final instruction executes, updates as the program hazards
 	unsigned int cycle = 0;										//this is which (out of 16) cycle we're on now
 	unsigned int instructionIterator = 0;								//this is which line we are on
-	while(cycle != total && cycle < 17){
+	while(cycle != total && cycle < 16){
 		print_line();
 		print_cycle();
 
@@ -181,12 +182,40 @@ int main(int argc, char* argv[])
 			if (hazard_offset == 0) { //DO NOT PARSE
 				if (pipeinstructions[i] != "nop") {
 					//Perform STEPPING here
-					if (pipeline[i][cycle - 1] == 3)
-						parse(pipeinstructions[i], sRegs, tRegs);
+					if (pipeline[i][cycle - 1] == 3) {
+						bool jump = parse(pipeinstructions[i], sRegs, tRegs);
+						if (jump) { //add all lines after label to pipe
+
+							for (unsigned int j = i + 1; j < pipeinstructions.size(); j++) {
+								pipeline[j][cycle] = 8 + (pipeline[j][cycle-1]); //set beginning of stall-land
+							}
+
+							int labelline = labelParse(pipeinstructions[i]);
+
+							for (unsigned int j = labelline; j < instructions.size(); j++) {
+								if (!isLabel(instructions[j])) {
+									pipeinstructions.push_back(instructions[j]); //add all lines after label.
+									total += 1;
+									pipelineSize = pipeline.size();
+
+									pipeline.push_back(vector<int>());
+									for (int k = 0; k < 16; k++)
+										pipeline[pipeline.size() - 1].push_back(5);
+
+								}
+							}
+							//int end = 5;
+						}
+					}
+					if (pipeline[i][cycle] >= 8) {}//do nothing
+					else
 					if (pipeline[i][cycle - 1] < 4 && !stallHazard)
 						pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
 					else if (pipeline[i][cycle - 1] < 4 && stallHazard)
 						pipeline[i][cycle] = pipeline[i][cycle - 1];
+					else if (pipeline[i][cycle - 1] >= 8 && pipeline[i][cycle - 1]  < 11 && !stallHazard) {
+						pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
+					}
 
 					int doublestall = i >= 2 && pipeline[i - 2][cycle] == 7;
 					int checkcycle = 4 -  doublestall;
@@ -212,12 +241,12 @@ int main(int argc, char* argv[])
 		}
 
 		//Update the line counts relative to the adjusted pipeline since hazards may have occured
-		unsigned int lineCount = 0;
-		while (lineCount < pipeline.size()) {
-			if (isLabel(pipeinstructions[lineCount]))
-				labelLine(temp, lineCount);
-			lineCount++;
-		}
+		//unsigned int lineCount = 0;
+		//while (lineCount < pipeline.size()) {
+		//	if (isLabel(pipeinstructions[lineCount]))
+		//		labelLine(temp, lineCount);
+		//	lineCount++;
+		//}
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
 		while(instructionIterator < instructions.size() && isLabel(instructions[instructionIterator])) 
