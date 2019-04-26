@@ -91,6 +91,7 @@ int main(int argc, char* argv[])
 		print_line();
 		print_cycle();
 
+		bool stallHazard = false;
 
 		unsigned int pipelineSize = pipeline.size();
 
@@ -117,9 +118,11 @@ int main(int argc, char* argv[])
 
 						unsigned int difference = 3 - (i - (i-realLines));
 
-						bool hazardFound = dataHazard(pipeinstructions[i], pipeinstructions[j]);
+					    bool hazardFound = dataHazard(pipeinstructions[i], pipeinstructions[j]);
 
 						if (hazardFound && difference > hazard_offset && realLines <= 2 && pipeline[j][cycle] != 5) {
+
+							stallHazard = true;
 
 							//cout << "asdfhasdgjas\n\n\n";
 
@@ -167,9 +170,10 @@ int main(int argc, char* argv[])
 								}
 								i += hazard_offset; //increment i so it actually points to the instruction still.
 								pipelineSize += hazard_offset;
-								total += 1;
+								total += hazard_offset;
 							}
 						}
+						
 					}
 				}
 			}
@@ -179,13 +183,18 @@ int main(int argc, char* argv[])
 					//Perform STEPPING here
 					if (pipeline[i][cycle - 1] == 3)
 						parse(pipeinstructions[i], sRegs, tRegs);
-					if (pipeline[i][cycle - 1] < 4)
+					if (pipeline[i][cycle - 1] < 4 && !stallHazard)
 						pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
+					else if (pipeline[i][cycle - 1] < 4 && stallHazard)
+						pipeline[i][cycle] = pipeline[i][cycle - 1];
 
-					if (i >= 1 && pipeline[i - 1][cycle] == 7 && pipeline[i][cycle] >= 4) {
+					int doublestall = i >= 2 && pipeline[i - 2][cycle] == 7;
+					int checkcycle = 4 -  doublestall;
+
+					if (i >= 1 && pipeline[i - 1][cycle] == 7 && pipeline[i][cycle] >= checkcycle && !stallHazard) {
 						pipeline[i - 1][cycle] = 5;
 					}
-					if (i >= 2 && pipeline[i - 2][cycle] == 7 && pipeline[i][cycle] >= 4) {
+					if (i >= 2 && pipeline[i - 2][cycle] == 7 && pipeline[i][cycle] >= checkcycle && !stallHazard) {
 						pipeline[i - 2][cycle] = 5;
 					}
 				}
