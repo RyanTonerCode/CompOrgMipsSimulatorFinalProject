@@ -103,36 +103,48 @@ int main(int argc, char* argv[])
 			//cout << pipeline[i][cycle - 1] << '\n';
 
 			//calculate the amount of hazard offset needed
-			int hazard_offset = 0;
+			unsigned int hazard_offset = 0;
 
 			if (pipeline[i][cycle - 1] + 1 == 1) {//only on ID check for hazards
 
 				//hazard detection (only when forwarding is false)
 				for (int j = i - 1; j >= ((int)i - 2) && j >= 0 && !forwarding; j--) {
 					//cout << "uh oh";
-					int difference = 3 - i - j;
+					unsigned int difference = 3 - (i - j);
 
-					if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
+					bool hazardFound = dataHazard(pipeinstructions[i], pipeinstructions[j]);
 
-						cout << "asdfhasdgjas\n\n\n";
+					if (hazardFound && difference > hazard_offset) {
+
+						//cout << "asdfhasdgjas\n\n\n";
 
 						hazard_offset = difference;
 						if (hazard_offset == 2) {
-							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
-							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
+							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
+							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
 
-							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
-							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+							pipeline.insert(pipeline.begin() + i, vector<int>());
+							pipeline.insert(pipeline.begin() + i, vector<int>());
+
+							for (int k = 0; k < 16; k++) {
+								pipeline[i].push_back(5);
+								pipeline[i + 1].push_back(5);
+							}
 						}
 						else if (hazard_offset == 1) {
-							pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
-							pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
+							pipeinstructions.insert(pipeinstructions.begin() + i, "NOP");
+							pipeline.insert(pipeline.begin() + i, vector<int>());
+							for (int k = 0; k < 16; k++)
+								pipeline[i].push_back(5);
+							
 						}
 						i += hazard_offset; //increment i so it actually points to the instruction still.
 						pipelineSize += hazard_offset;
 					}
 				}
 			}
+
+			int nothingbuger = 0;
 
 			if (hazard_offset == 0) { //DO NOT PARSE
 				//Perform STEPPING here

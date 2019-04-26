@@ -17,7 +17,7 @@ bool dataHazard(string currentLine, string prevLine) {
 		string reg1 = currentLine.substr(currentLine.find(",") + 1, currentLine.find_last_of(",") - (currentLine.find(",") + 1));
 		string reg2 = currentLine.substr(currentLine.find_last_of("$"));
 
-		return dest_str.compare(reg1) == 0 || dest_str.compare(reg2) == 0;
+		return dest_str == reg1 || dest_str == reg2;
 	}
 	else if (instruction == "addi" || instruction == "ori" || instruction == "slti" || instruction == "andi") {
 		string reg1 = currentLine.substr(currentLine.find(",")+1, currentLine.find_last_of(",") - (currentLine.find(",") + 1));
