@@ -54,17 +54,12 @@ int main(int argc, char* argv[])
 	for(int i = 0; i < 8; i++)
 		sRegs[i] = 0; 
 
-	//tRegs[0] = 1;
-	//tRegs[1] = 1;
-	//and_(&sRegs[0], &tRegs[0], &tRegs[1]);
-	//cout << sRegs[0];
-
 	if (!strcmp(argv[1], "F"))
-	cout << "START OF SIMULATION (forwarding)" << endl;
+		cout << "START OF SIMULATION (forwarding)" << endl;
 	else
 		cout << "START OF SIMULATION (no forwarding)" << endl;
 
-	//bool forwarding = *argv[1] == 'F';
+	bool forwarding = *argv[1] == 'F';
 	//cout << forwarding << endl;
 
 	ifstream inputstream(argv[2]);
@@ -73,7 +68,7 @@ int main(int argc, char* argv[])
 	int labelcount = 0;
 	int lineCount = 0;
 	while(inputstream >> temp){
-		if(temp.at(temp.length() - 2) == ':'){
+		if(isLabel(temp)){
 			//indicates a label
 			labelLine(temp, lineCount);
 			instructions.push_back(temp);
@@ -92,6 +87,7 @@ int main(int argc, char* argv[])
 
 	vector<vector<int> > pipeline;					//A vector-vector of the cycles' stage
 	vector<string> pipeinstructions;		//A vector of the pipe's instruction
+
 	// for(unsigned int i = 0; i < instructions.size(); i++){
 	// 	if(instructions[i][instructions[i].length] != ':'){
 	// 		pipeline.push_back(vector<string>());
@@ -118,6 +114,19 @@ int main(int argc, char* argv[])
 		//		-hazarding should be initially checked here, but processed in the later for loop
 		for (unsigned int i = 0; i < pipeline.size(); i++) {
 			//cout << pipeline[i][cycle - 1] << '\n';
+
+			//calculate the amount of hazard offset needed
+			int hazard_offset = -1;
+			//hazard detection
+			for (unsigned int j = i - 1; j >= 0; j--) {
+				int difference = 4 - pipeline[i][cycle - 1] - pipeline[j][cycle - 1];
+				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
+					hazard_offset = difference;
+				}
+			}
+
+			//HANDLE NOPS
+
 			if (pipeline[i][cycle - 1] == 3) parse(pipeinstructions[i], sRegs, tRegs);
 			if (pipeline[i][cycle - 1] < 4) pipeline[i][cycle] = pipeline[i][cycle-1] + 1;
 		}

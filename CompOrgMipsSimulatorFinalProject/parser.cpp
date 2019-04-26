@@ -6,6 +6,10 @@ using namespace std;
 
 std::map<string, int> labelMap;
 
+bool isLabel(string line) {
+	return line.at(line.length() - 2) == ':';
+}
+
 //get line number from a label, for beq's and bne's
 int labelParse(string line) {
 	string instruction = line.substr(0, line.find(" "));
@@ -19,9 +23,8 @@ int labelParse(string line) {
 
 //sets the map for a label line with a colon
 void labelLine(string line, int lineNum) {
-	if (line.at(line.length() - 2) == ':') {
+	if (isLabel(line))
 		labelMap[line.substr(0, line.length() - 2)] = lineNum;
-	}
 }
 
 //please dont pass me invalid data
