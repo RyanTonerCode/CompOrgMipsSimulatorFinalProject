@@ -142,12 +142,12 @@ int main(int argc, char* argv[])
 											pipeline[i + 1].push_back(5);
 										}
 									}
-									pipeline[i][cycle - 2] = 0;
-									pipeline[i][cycle - 1] = 1;
-									pipeline[i][cycle] = 7;
-									pipeline[i + 1][cycle - 2] = 0;
-									pipeline[i + 1][cycle - 1] = 1;
-									pipeline[i + 1][cycle] = 7;
+									pipeline[i][cycle - 1] = 0;
+									pipeline[i][cycle] = 1;
+									pipeline[i][cycle + 1] = 7;
+									pipeline[i + 1][cycle - 1] = 0;
+									pipeline[i + 1][cycle] = 1;
+									pipeline[i + 1][cycle + 1] = 7;
 								}
 								else if (hazard_offset == 1) {
 									pipeinstructions.insert(pipeinstructions.begin() + i, "nop");
@@ -160,9 +160,9 @@ int main(int argc, char* argv[])
 											pipeline[i].push_back(5);
 										}
 									}
-									pipeline[i][cycle - 2] = 0;
-									pipeline[i][cycle - 1] = 1;
-									pipeline[i][cycle] = 7;
+									pipeline[i][cycle - 1] = 0;
+									pipeline[i][cycle] = 1;
+									pipeline[i][cycle + 1] = 7;
 
 								}
 								i += hazard_offset; //increment i so it actually points to the instruction still.
