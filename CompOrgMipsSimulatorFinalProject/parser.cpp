@@ -45,7 +45,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 		
 	if (instruction == "add" || instruction == "or" || instruction == "and" || instruction == "slt") {
 
-		string dest_str = line.substr(line.find("$")+1, line.find(","));
+		string dest_str = line.substr(line.find("$")+1, line.find(",") - (line.find("$") + 1));
 
 		int number = dest_str[1] - '0';
 
@@ -56,7 +56,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 		else
 			dest = &(saveReg[number]);
 
-		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
+		string reg1_str = line.substr(line.find(",") + 2, line.find_last_of(",") - (line.find(",") + 1));
 
 		number = reg1_str[1] - '0';
 
@@ -67,8 +67,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 		else
 			reg1 = &zero;
 
-		string reg2_str = line.substr(line.find(","));
-		reg2_str = line.substr(line.find("$") + 1, line.find(","));
+		string reg2_str = line.substr(line.find_last_of("$")+1);
 
 		number = reg2_str[1] - '0';
 
@@ -102,7 +101,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 		else
 			dest = &(saveReg[number]);
 
-		string reg1_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
+		string reg1_str = line.substr(line.find(",") + 2, line.find_last_of(",") - (line.find(",") + 1));
 
 		number = reg1_str[1] - '0';
 
@@ -127,7 +126,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 			slti_(dest, reg1, immediate);
 	}
 	else if (instruction == "bne" || instruction == "beq") {
-		string left_str = line.substr(line.find("$") + 1, line.find(","));
+		string left_str = line.substr(line.find("$") + 1, line.find(",") - (line.find("$") + 1));
 
 		int number = left_str[1] - '0';
 
@@ -141,7 +140,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 		else
 			left = &zero;
 
-		string right_str = line.substr(line.find(",")).substr(line.find("$") + 1, line.find(","));
+		string right_str = line.substr(line.find_last_of("$")+1, line.find_last_of(",") - (line.find_last_of("$")+1));
 
 		number = right_str[1] - '0';
 
