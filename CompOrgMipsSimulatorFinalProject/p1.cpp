@@ -59,9 +59,7 @@ int main(int argc, char* argv[])
 	else
 		cout << "START OF SIMULATION (no forwarding)" << endl;
 
-	//currently unused variable, commenting it out for -Wall
-	//bool forwarding = *argv[1] == 'F';
-	//cout << forwarding << endl;
+	bool forwarding = *argv[1] == 'F';
 
 	ifstream inputstream(argv[2]);
 	vector<string> instructions;
@@ -70,7 +68,6 @@ int main(int argc, char* argv[])
 	int lineCount = 0;
 	while(inputstream >> temp){
 		if(isLabel(temp)){
-			//indicates a label
 			labelLine(temp, lineCount);
 			instructions.push_back(temp);
 			labelcount++;
@@ -81,17 +78,8 @@ int main(int argc, char* argv[])
 		lineCount++;
 	}
 
-	vector<vector<int> > pipeline;					//A vector-vector of the cycles' stage
-	vector<string> pipeinstructions;		//A vector of the pipe's instruction
-
-	// for(unsigned int i = 0; i < instructions.size(); i++){
-	// 	if(instructions[i][instructions[i].length] != ':'){
-	// 		pipeline.push_back(vector<string>());
-	// 		pipeline.back().push_back(instructions[i]);
-	// 		for(unsigned int j = 0; j < 16; j++)
-	// 			pipeline.back().push_back(".");
-	// 	}
-	// }
+	vector<vector<int> > pipeline;	  //[instruction][cycle] = stage
+	vector<string> pipeinstructions;  //[index]=instruction
  
 	string pipestages[8] = {"IF", "ID", "EX", "MEM", "WB", ".", "*", "*" };
 	//pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.
@@ -113,25 +101,26 @@ int main(int argc, char* argv[])
 
 			//calculate the amount of hazard offset needed
 			int hazard_offset = 0;
-			//hazard detection
-			for (int j = i - 1; j >= 0; j--) {
+
+			//hazard detection (only when forwarding is false)
+			for (int j = i - 1; j >= i - 2 && j >= 0 && forwarding == false; j--) {
 				//cout << "uh oh";
 				int difference = i - j;
-				if (dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
+				if ( dataHazard(pipeinstructions[i], pipeinstructions[j]) && difference > hazard_offset) {
 					hazard_offset = difference;
-					if (hazard_offset >= 2) {
+					if (hazard_offset == 2) {
 						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
 						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
 
 						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
 						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
 					}
-					if (hazard_offset >= 1) {
+					else if (hazard_offset == 1) {
 						pipeinstructions.insert(pipeinstructions.begin() + i - 1, "NOP");
 						pipeline.insert(pipeline.begin() + i - 1, vector<int>(6));
 					}
+					i += hazard_offset; //increment i so it actually points to the instruction still.
 				}
-				//cout << "\nwoohoo\n";
 			}
 
 			if (hazard_offset == 0) { //DO NOT PARSE
@@ -143,15 +132,13 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		//Update the line counts relative to the pipeline since hazards may have occured
-		int lineCount = 0;
+		//Update the line counts relative to the adjusted pipeline since hazards may have occured
+		unsigned int lineCount = 0;
 		while (lineCount < pipeline.size()) {
 			if (isLabel(pipeinstructions[lineCount]))
 				labelLine(temp, lineCount);
 			lineCount++;
 		}
-
-		//cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
 		while(instructionIterator < instructions.size() && isLabel(instructions[instructionIterator])) 
@@ -182,23 +169,28 @@ int main(int argc, char* argv[])
 		//Print full new pipeline
 		for(unsigned int i = 0; i < pipeline.size(); i++){
 
+			//print the current instruction
 			cout << pipeinstructions[i];
+
+			//add spacing
 			for (unsigned int k = 0; k < 20 - pipeinstructions[i].length(); k++)
 				cout << ' ';
+
+			if (pipeinstructions[i] == "NOP") {
+				//manage printing nops around here: need IF and ID and * in single print
+				if (pipeline[i][cycle - 1] == 6) { //this updating only happens ONCE!
+					//here print IF and ID and *
+					pipeline[i][cycle - 3] = 0; //IF
+					pipeline[i][cycle - 2] = 1; //ID
+					pipeline[i][cycle - 1] = 7; //end star so it won't happen again
+				}
+			}
+
 			for(unsigned int j = 0; j < 15; j++){
 				std::cout.width(4);
 				std::cout.fill(' ');
 
-				if (pipeinstructions[i] == "NOP") {
-					//manage printing nops around here: need IF and ID and * in single print
-					if (pipeline[i][cycle - 1] == 6) {
-						//here print IF and ID and *
-					}
-					else {
-						//here only print the *
-					}
-				}
-
+				//print the current step in the pipeline
 				cout << left << pipestages[pipeline[i][j]];
 			}
 			cout << pipestages[pipeline[i][15]];
