@@ -182,10 +182,10 @@ int main(int argc, char* argv[])
 					if (pipeline[i][cycle - 1] < 4)
 						pipeline[i][cycle] = pipeline[i][cycle - 1] + 1;
 
-					if (i >= 1 && pipeline[i - 1][cycle] == 7) {
+					if (i >= 1 && pipeline[i - 1][cycle] == 7 && pipeline[i][cycle] >= 3) {
 						pipeline[i - 1][cycle] = 5;
 					}
-					if (i >= 2 && pipeline[i - 2][cycle] == 7) {
+					if (i >= 2 && pipeline[i - 2][cycle] == 7 && pipeline[i][cycle] >= 3) {
 						pipeline[i - 2][cycle] = 5;
 					}
 				}
