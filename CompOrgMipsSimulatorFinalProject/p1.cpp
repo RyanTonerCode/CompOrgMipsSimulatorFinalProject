@@ -141,8 +141,8 @@ int main(int argc, char* argv[])
 		//cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
-		if (stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':')
-			while(stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 2) == ':') stackpointer++;
+		if (stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 1) == ':')
+			while(stackpointer < instructions.size() && instructions[stackpointer].at(instructions[stackpointer].length() - 1) == ':') stackpointer++;
 
 		//cout << "instruction found\n";
 		if (stackpointer < instructions.size()) {
