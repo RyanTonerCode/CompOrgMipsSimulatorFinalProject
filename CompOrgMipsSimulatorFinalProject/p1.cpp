@@ -143,6 +143,14 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		//Update the line counts relative to the pipeline since hazards may have occured
+		int lineCount = 0;
+		while (lineCount < pipeline.size()) {
+			if (isLabel(pipeinstructions[lineCount]))
+				labelLine(temp, lineCount);
+			lineCount++;
+		}
+
 		//cout << "stepped\n";
 
 		//ADD NEW PIPE FOR NEW INSTRUCTION READ-IN
