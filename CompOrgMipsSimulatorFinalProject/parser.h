@@ -5,7 +5,7 @@
 #include <cstring>
 #include <cstdlib>
 
-bool isLabel(string line);
+bool isLabel(std::string line);
 
 int labelParse(std::string line);
 
