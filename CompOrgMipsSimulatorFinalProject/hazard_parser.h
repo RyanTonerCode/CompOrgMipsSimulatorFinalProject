@@ -2,6 +2,7 @@
 #define hazard_parser
 
 #include <string>
+using namespace std;
 
-bool dataHazard(std::string currentLine, std::string prevLine);
+bool dataHazard(string currentLine, string prevLine);
 #endif 

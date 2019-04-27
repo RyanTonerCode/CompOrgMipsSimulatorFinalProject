@@ -4,8 +4,10 @@
 #include <map>
 using namespace std;
 
-std::map<string, int> labelMap;
+//Maps the label to the proceding line of code.
+map<string, int> labelMap;
 
+//returns whether the line defines a label
 bool isLabel(string line) {
 	return line.at(line.length() - 1) == ':';
 }
@@ -27,21 +29,20 @@ void labelLine(string line, int lineNum) {
 		labelMap[line.substr(0, line.length() - 1)] = lineNum;
 }
 
-//please dont pass me invalid data
-//note: the labelmap right now also has the lines of bne's and beq's with labels in them
+//returns the line associated with the given label
 int getLabelLine(string label) {
 	return labelMap.at(label);
 }
 
-//this parser is for writeback
-//think of this as execution parser
-//returns true for branching
+//This parser is for the writeback stage
+//Think of this as "execution" parser
+//Returns true for branching
 bool parse(string line, int saveReg[8], int tempReg[10]) {
 
+	//pseudo zero-register
 	int zero = 0;
 
 	string instruction = line.substr(0, line.find(" "));
-
 		
 	if (instruction == "add" || instruction == "or" || instruction == "and" || instruction == "slt") {
 
@@ -130,8 +131,7 @@ bool parse(string line, int saveReg[8], int tempReg[10]) {
 
 		int number = left_str[1] - '0';
 
-		int* left, * right;
-		//int immediate = 0; -wall says this is unused
+		int* left, *right;
 
 		if (left_str[0] == 't')
 			left = &(tempReg[number]);

@@ -151,18 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CompOrgMipsSimulatorFinalProject.cpp" />
     <ClCompile Include="execution.cpp" />
     <ClCompile Include="hazard_parser.cpp" />
     <ClCompile Include="p1.cpp" />
     <ClCompile Include="parser.cpp" />
-    <ClCompile Include="pipeline.cpp" />
+    <ClCompile Include="printer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="execution.h" />
     <ClInclude Include="hazard_parser.h" />
     <ClInclude Include="parser.h" />
-    <ClInclude Include="pipeline.h" />
+    <ClInclude Include="printer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
