@@ -13,6 +13,6 @@ void labelLine(string line, int lineNum);
 
 int getLabelLine(string label);
 
-bool parse(string line, int saveReg[8], int tempReg[10]);
+bool parse(string line, int saveReg[8], int tempReg[10], int valueRegs[2], int argRegs[4]);
 
 #endif 

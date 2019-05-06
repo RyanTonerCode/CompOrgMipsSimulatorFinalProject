@@ -1,5 +1,30 @@
 #include "execution.h"
+#include <string>
 #include <iostream>
+#include <regex>
+#include "data_parser.h"
+#include "printer.h"
+using namespace std;
+
+void li(int* destRegister, int immediate) {
+	*destRegister = immediate;
+}
+
+void la(int* destRegister, int address) {
+	*destRegister = address;
+}
+
+void syscall(int vRegs[2], int aRegs[4]) {
+	if (vRegs[0] == 4) { //print string
+		int address = aRegs[0]; //get the address of the string in memory
+		string strFromAddress = getStringFromAddress(address);
+		if (strFromAddress == "\\n") {
+			sysout("\n");
+		}
+		else
+			sysout(strFromAddress); //deference the pointer to print the actual string by calling the operating system
+	}
+}
 
 void add_(int* destRegister, int* leftRegister, int* rightRegister) {
 	*destRegister = *leftRegister + *rightRegister;

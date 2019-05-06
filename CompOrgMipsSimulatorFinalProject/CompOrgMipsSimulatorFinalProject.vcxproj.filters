@@ -30,6 +30,9 @@
     <ClCompile Include="printer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="data_parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h">
@@ -44,5 +47,16 @@
     <ClInclude Include="printer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="data_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="text-segment.txt">
+      <Filter>Source Files</Filter>
+    </Text>
+    <Text Include="data-segment.txt">
+      <Filter>Source Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

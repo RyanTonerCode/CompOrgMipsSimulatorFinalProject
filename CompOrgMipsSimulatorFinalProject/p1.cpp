@@ -10,6 +10,7 @@
 #include "parser.h"
 #include "hazard_parser.h"
 #include "printer.h"
+#include "data_parser.h"
 
 using namespace std;
 
@@ -18,30 +19,42 @@ unsigned int maxCycles = 16;
 
 int main(int argc, char* argv[])
 {
+	int vRegs[2];
+	int aRegs[4];
+
 	int tRegs[10], sRegs[8];
 	for (int i = 0; i < 10; i++) {
 		tRegs[i] = 0;
 		if(i < 8)
 			sRegs[i] = 0;
+		if (i < 2)
+			vRegs[i] = 0;
+		if (i < 4)
+			aRegs[i] = 0;
 	}
 	
 	bool forwarding = *argv[1] == 'F';
 
 	print_start(forwarding);
 
-	ifstream inputstream(argv[2]);
-	vector<string> instructions;
+	//parse out the data segment looking for strings
+	ifstream datainputstream(argv[2]);
 	string temp, temp2;
+	while (getline(datainputstream, temp)) {
+		parseDataLine(temp);
+	}
+
+	ifstream textinputstream(argv[3]);
+	vector<string> instructions;
 	int labelcount = 0;
 	int lineCount = 0;
-	while(inputstream >> temp){
+	while(getline(textinputstream, temp)){
 		if(isLabel(temp)){
 			labelLine(temp, lineCount); //label set as next line
 			instructions.push_back(temp);
 			labelcount++;
 		} else {
-			inputstream >> temp2;
-			instructions.push_back(temp + ' ' + temp2);
+			instructions.push_back(temp);
 			lineCount++; //only increment for real lines
 		}
 	}
@@ -117,7 +130,7 @@ int main(int argc, char* argv[])
 				if (pipeinstructions[i] != "nop") {
 					//Perform STEPPING here
 					if (pipeline[i][cycle - 1] == 3) {
-						bool jump = parse(pipeinstructions[i], sRegs, tRegs);
+						bool jump = parse(pipeinstructions[i], sRegs, tRegs, vRegs, aRegs);
 						if (jump) { //add all lines after label to pipe
 
 							for (unsigned int j = i + 1; j < pipeinstructions.size(); j++)
@@ -201,7 +214,7 @@ int main(int argc, char* argv[])
 
 		cycle++;
 		instructionIterator++;
-		print_regs(sRegs, tRegs);
+		print_regs(sRegs, tRegs, vRegs, aRegs);
 	}
 
 	print_end();

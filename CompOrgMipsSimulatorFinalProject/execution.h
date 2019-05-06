@@ -1,6 +1,15 @@
 #ifndef execution_h
 #define execution_h
 
+#include <string>
+using namespace std;
+
+void li(int* destRegister, int immediate);
+
+void la(int* destRegister, int address);
+
+void syscall(int vRegs[2], int aRegs[4]);
+
 void add_(int* destRegister, int* leftRegister, int* rightRegister);
 
 void addi_(int* destRegister, int* leftRegister, int immediate);

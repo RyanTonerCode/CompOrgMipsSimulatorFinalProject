@@ -1,0 +1,6 @@
+txt1: .asciiz "This is a string1"
+txt2: .asciiz "This is a string2"
+txt3: .asciiz "This is a string3"
+txt4: .asciiz "This is a string4"
+txt5: .asciiz "This is a string5"
+newline: .asciiz "\n"

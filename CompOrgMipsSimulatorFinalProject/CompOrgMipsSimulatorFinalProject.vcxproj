@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="data_parser.cpp" />
     <ClCompile Include="execution.cpp" />
     <ClCompile Include="hazard_parser.cpp" />
     <ClCompile Include="p1.cpp" />
@@ -158,10 +159,21 @@
     <ClCompile Include="printer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="data_parser.h" />
     <ClInclude Include="execution.h" />
     <ClInclude Include="hazard_parser.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="printer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data-segment.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Text>
+    <Text Include="text-segment.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

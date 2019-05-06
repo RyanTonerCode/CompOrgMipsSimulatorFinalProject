@@ -4,6 +4,12 @@
 #include <string>
 using namespace std;
 
+string toPrint = "";
+
+void sysout(string print) {
+	toPrint += print;
+}
+
 void print_start(bool forwarding) {
 	if (forwarding)
 		cout << "START OF SIMULATION (forwarding)" << endl;
@@ -14,6 +20,9 @@ void print_start(bool forwarding) {
 void print_end() {
 	print_line();
 	cout << "END OF SIMULATION" << "\n";
+	cout << "----------------------------------------------------------------------------------\n" << "OUTPUT STREAM:\n";
+	cout << toPrint << "\n----------------------------------------------------------------------------------";
+
 }
 
 //prints the dashes
@@ -27,7 +36,7 @@ void print_cycle() {
 }
 
 //prints all the registers with their data
-void print_regs(int sRegs[8], int tRegs[10]) {
+void print_regs(int sRegs[8], int tRegs[10], int vRegs[2], int aRegs[4]) {
 
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -47,11 +56,25 @@ void print_regs(int sRegs[8], int tRegs[10]) {
 		}
 		for (int j = 0; j < 2 && i == 2; j++) {
 			cout << "$t" << i * 4 + j << " = " << tRegs[i * 4 + j];
-			for (unsigned int k = 0; j != 1 && k < (14 - (to_string(tRegs[i * 4 + j])).length()); k++)
+			for (unsigned int k = 0; k < (14 - (to_string(tRegs[i * 4 + j])).length()); k++)
 				cout << ' ';
 		}
+		if (i == 2) {
+			cout << "$v0" << " = " << vRegs[0];
+			for (unsigned int k = 0; k < (14 - (to_string(vRegs[0])).length()); k++)
+				cout << ' ';
+			cout << "$v1" << " = " << vRegs[1];
+		}
+
 		cout << endl;
 	}
+	for (int i = 0; i < 4; i++) {
+		cout << "$a" << i << " = " << aRegs[i];
+		for (unsigned int k = 0; i != 3 && k < (14 - (to_string(aRegs[i])).length()); k++)
+			cout << ' ';
+	}
+	cout << endl;
+
 }
 
 //pipeling contains a matrix of the stage cycle. The stage cycle is an index to pipestages to represent the chars.

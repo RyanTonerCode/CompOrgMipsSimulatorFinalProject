@@ -1,0 +1,17 @@
+li $v0, 4
+la $a0,txt1
+syscall
+la $a0,newline
+syscall
+la $a0,txt3
+syscall
+la $a0,newline
+syscall
+la $a0,txt4
+syscall
+la $a0,newline
+syscall
+la $a0,newline
+syscall
+la $a0,newline
+syscall

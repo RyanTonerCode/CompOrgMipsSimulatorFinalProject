@@ -2,6 +2,7 @@
 #include <string>
 #include "execution.h"
 #include <map>
+#include "data_parser.h"
 using namespace std;
 
 //Maps the label to the proceding line of code.
@@ -37,14 +38,47 @@ int getLabelLine(string label) {
 //This parser is for the writeback stage
 //Think of this as "execution" parser
 //Returns true for branching
-bool parse(string line, int saveReg[8], int tempReg[10]) {
+bool parse(string line, int saveReg[8], int tempReg[10], int valueRegs[2], int argRegs[4]) {
+
+	if (line == "syscall")
+		syscall(valueRegs, argRegs);
 
 	//pseudo zero-register
 	int zero = 0;
 
 	string instruction = line.substr(0, line.find(" "));
-		
-	if (instruction == "add" || instruction == "or" || instruction == "and" || instruction == "slt") {
+	
+	if (instruction == "li" || instruction == "la") {
+		string dest_str = line.substr(line.find("$") + 1, line.find(",") - (line.find("$") + 1));
+
+		int number = dest_str[1] - '0';
+
+		int* dest;
+
+		if (dest_str[0] == 't')
+			dest = &(tempReg[number]);
+		else if (dest_str[0] == 's')
+			dest = &(saveReg[number]);
+		else if (dest_str[0] == 'v')
+			dest = &(valueRegs[number]);
+		else if (dest_str[0] == 'a')
+			dest = &(argRegs[number]);
+		else
+			dest = &zero;
+
+		if (instruction == "li") {
+			string imm_str = line.substr(line.find_last_of(",") + 1);
+			int immediate = atoi((const char*)imm_str.c_str());
+			li(dest, immediate);
+		}
+		else if (instruction == "la") {
+			//have to actually get an address here
+			string label_str = line.substr(line.find_last_of(",") + 1);
+			la(dest, getStringAddress(label_str));
+		}
+
+	}
+	else if (instruction == "add" || instruction == "or" || instruction == "and" || instruction == "slt") {
 
 		string dest_str = line.substr(line.find("$")+1, line.find(",") - (line.find("$") + 1));
 
