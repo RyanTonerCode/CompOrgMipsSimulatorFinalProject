@@ -40,6 +40,5 @@ int getStringAddress(string label) {
 }
 
 string getStringFromAddress(int address) {
-	int abc = 5;
 	return addressedStringData[address];
 }

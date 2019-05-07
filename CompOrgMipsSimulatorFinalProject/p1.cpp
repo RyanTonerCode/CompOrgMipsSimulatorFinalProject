@@ -15,7 +15,7 @@
 using namespace std;
 
 unsigned int predictiveStallNum = 7;
-unsigned int maxCycles = 16;
+unsigned int maxCycles = 32;
 
 int main(int argc, char* argv[])
 {

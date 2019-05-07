@@ -62,7 +62,6 @@ bool beq_(int* leftRegister, int* rightRegister) {
 	return *leftRegister == *rightRegister;
 }
 
-
 bool bne_(int* leftRegister, int* rightRegister) {
 	return *leftRegister != *rightRegister;
 }
